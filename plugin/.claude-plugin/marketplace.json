@@ -1,0 +1,15 @@
+{
+  "name": "collab-os",
+  "description": "collab-os: a small operating system for working with an AI assistant - a launch gate, recon before claims, and handoff blocks, all pointing at one charter you own.",
+  "owner": {
+    "name": "collab-os contributors"
+  },
+  "plugins": [
+    {
+      "name": "collab-os",
+      "source": "./collab-os",
+      "version": "0.1.4",
+      "description": "Launch gate (5-box decision card), recon before you assert, and handoff blocks for Claude Code. Holds procedures only; the rules live in your own charter file."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "charter": "CHARTER.md",
+  "gate_log": "GATE-LOG.md",
+  "claim_log": "CLAIM-LOG.md",
+  "handoff_dir": "handoffs",
+  "rules_file": "~/.claude/CLAUDE.md",
+  "transcripts_dir": "~/.claude/projects",
+  "lang": "en"
+}
