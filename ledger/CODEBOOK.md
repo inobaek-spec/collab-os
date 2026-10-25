@@ -77,7 +77,7 @@ If one other root clearly contributed, record it. Otherwise `-`.
 
 ### 3a. Detector vocabulary - one list for the ledger, this codebook and the counting tool
 
-The ledger template, this codebook and `tools/ledger_count.py` use the same four words. Why one list: with two lists, the entries a person writes and the rows a classifier writes cannot be counted by one tool, and the totals silently disagree.
+The ledger template, this codebook and `tools/ledger_count.py` use the same four words. Why one list: with two lists, the entries the assistant writes and the rows a classifier writes cannot be counted by one tool, and the totals silently disagree.
 
 | Word | Meaning | Korean operating word | Other spellings the `private` profile counts as this word |
 |---|---|---|---|
