@@ -38,7 +38,9 @@ Start with the cases ([`CASES.md`](CASES.md)) -> the ledger template ([`ledger/L
 
 Tested on macOS with Claude Code 2.1.296. On Linux only the hook and the tools were checked (installing Claude Code there was not tested). Windows is untested: the session-start hook is a POSIX shell script, and on Windows Claude Code runs shell-form command hooks through Git Bash (Git for Windows) - without it they go to PowerShell, which cannot run this script. WSL has not been tried.
 
-Unzip the archive (or clone the repository), open Claude Code in that folder or the folder directly above it, and paste this whole block into the chat:
+**Easiest:** open Claude Code in the unzipped folder and type one line - `Read INSTALL.md in this folder and follow it step by step.` ([`INSTALL.md`](INSTALL.md) is the prompt below as a file, byte for byte; the pasted block is the path outside testers have used.)
+
+Or paste it yourself: unzip the archive (or clone the repository), open Claude Code in that folder or the folder directly above it, and paste this whole block into the chat:
 
 <details>
 <summary>The install prompt - click to expand, then copy the whole block</summary>
@@ -51,7 +53,7 @@ Rules for this whole task:
 - No rm, no sudo, never overwrite an existing file, no network requests.
 - If anything is unclear or a step fails, stop and ask me. Do not guess.
 
-1. Find the absolute path of the unzipped collab-os folder: look in the current folder, its subfolders and its parent folders for collab-os/plugin/.claude-plugin/marketplace.json (the current folder may itself be the collab-os folder). If you do not find exactly one, ask me for the path and stop.
+1. Find the absolute path of the unzipped collab-os folder: look in the current folder, its subfolders and its parent folders for plugin/.claude-plugin/marketplace.json, open each one you find and keep only those whose "name" is exactly collab-os. The folder that contains that plugin folder is the collab-os folder, whatever it is called - collab-os, collab-os-main (GitHub's Download ZIP) or a name your unzip tool shortened, such as collab-os-v0. The current folder may itself be that folder. If you do not find exactly one, ask me for the path and stop.
 2. Run `claude plugin marketplace list`. If a marketplace named collab-os is already listed and points at this same folder, just continue. If it points somewhere else, show me both paths and ask whether to replace it; continue only if I say yes, by running `claude plugin marketplace remove collab-os` - tell me first that this also uninstalls the plugin that came from it and deletes its saved options, secrets and data. In either case, then run `claude plugin marketplace add <that absolute path>/plugin`, then `claude plugin install collab-os@collab-os`, then `claude plugin list`. If the list does not show collab-os@collab-os with Status: ✔ enabled, show me the output exactly as printed and stop.
 3. If ~/.config/collab-os/CHARTER.md already exists, do not change it: ask me what to do and stop. Otherwise run `mkdir -p ~/.config/collab-os` and create ~/.config/collab-os/CHARTER.md containing exactly the text between BEGIN and END:
 BEGIN
@@ -84,7 +86,7 @@ END
 
 Everything this prompt does is the same as "Do it by hand" below (the QUICKSTART has the step-by-step version) - read it first, and if you would rather not hand it to the assistant, do it by hand.
 
-One outside tester has taken this paste-in install all the way through (an earlier version stalled once at step 2; that is fixed). How long it takes has not been timed yet - if it stalls, tell us where.
+One outside tester reported that v0.1.4 installed on a new Mac and reinstalled on an existing Mac without problems, using this paste-in prompt (step 1 remarked once that the folder name did not match - the wording above now allows other names; an earlier version stalled once at step 2; that is fixed). How long it takes has not been timed yet - if it stalls, tell us where.
 
 ## Measured
 
@@ -141,21 +143,21 @@ The single most useful rule in the ledger is the **negative control**: before an
 
 You need Claude Code, installed and **logged in** (run `claude` once and sign in before you start).
 
-1. **Easiest:** paste the prompt from [Install with Claude Code](#install-with-claude-code-paste-this) at the top of this page into Claude Code.
+1. **Easiest:** open Claude Code in the unzipped folder and type `Read INSTALL.md in this folder and follow it step by step.` - or paste the prompt from [Install with Claude Code](#install-with-claude-code-paste-this) at the top of this page into Claude Code.
 2. **Check** - see below.
-3. **Or do it by hand** ([`QUICKSTART.md`](QUICKSTART.md) has every step). Unzip the archive (or clone this repository - the green Code button on GitHub shows the URL - into a folder named `collab-os`), go into the folder with `cd collab-os`, then:
+3. **Or do it by hand** ([`QUICKSTART.md`](QUICKSTART.md) has every step). Unzip the archive (or clone this repository - the green Code button on GitHub shows the URL - into a folder named `collab-os`), go into the folder with `cd collab-os` (the unzipped folder may be called something else - `collab-os-main` from GitHub's Download ZIP, or a shortened name such as `collab-os-v0`; use the name you see), then:
 
 ```
 claude plugin marketplace add ./plugin
 claude plugin install collab-os@collab-os
 ```
 
-(From the folder *above* `collab-os`, the first command is `claude plugin marketplace add ./collab-os/plugin`.)
+(From the folder *above* it, the first command is `claude plugin marketplace add ./<folder name>/plugin` - for example `./collab-os/plugin` or `./collab-os-main/plugin`.)
 
 **Did it install? Check in ten seconds** - in a terminal, run `claude plugin list`:
 - Success: the list shows `collab-os@collab-os` with `Status: ✔ enabled`.
 - `` No plugins installed. Use `claude plugin install` to install a plugin. `` - the install step did not run.
-- `✘ Path does not exist: .../collab-os/plugin` (printed by the marketplace step) - you ran it from the wrong folder; run it from inside `collab-os` (or use `./collab-os/plugin` from the folder above).
+- `✘ Path does not exist: .../collab-os/plugin` (printed by the marketplace step) - you ran it from the wrong folder; run it from inside the unzipped folder (or use `./<folder name>/plugin` from the folder above).
 - `✘ Failed to install plugin "collab-os@collab-os": Plugin "collab-os" not found in marketplace "collab-os".` - the marketplace step was skipped or failed; run it first.
 
 Then put a charter at `~/.config/collab-os/CHARTER.md` (or create `~/.config/collab-os/config.json` pointing at yours - for its contents see [`collab-os.config.example.json`](collab-os.config.example.json)). For the hook message in Korean, put `"lang": "ko"` in the config. The four-article starter charter is in QUICKSTART Step 3 as one paste-in command; the ten-article template is `CHARTER-TEMPLATE.md`. Then start Claude Code afresh (quit the current session and run `claude` again): the session-start hook announces where your charter is.

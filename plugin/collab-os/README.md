@@ -31,14 +31,14 @@ Working rules for an AI assistant tend to get pasted into several places - a glo
 
 ## Install
 
-From inside the unzipped or cloned `collab-os` folder:
+From inside the unzipped or cloned folder (usually `collab-os`; GitHub's Download ZIP makes `collab-os-main`):
 
 ```
 claude plugin marketplace add ./plugin
 claude plugin install collab-os@collab-os
 ```
 
-(From the folder *above* `collab-os`, the first command is `claude plugin marketplace add ./collab-os/plugin`.)
+(From the folder *above* it, the first command is `claude plugin marketplace add ./<folder name>/plugin` - for example `./collab-os/plugin` or `./collab-os-main/plugin`.)
 
 Check: `claude plugin list` shows `collab-os`; in a new session, `/collab-os:gate` autocompletes and the session-start message appears.
 

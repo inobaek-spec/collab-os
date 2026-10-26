@@ -8,7 +8,9 @@ This is for people who already use Claude Code, Anthropic's terminal assistant. 
 
 Tested on macOS with Claude Code 2.1.296. On Linux only the hook and the tools were checked (installing Claude Code there was not tested). Windows is untested: the session-start hook is a POSIX shell script, and on Windows Claude Code runs shell-form command hooks through Git Bash (Git for Windows) - without it they go to PowerShell, which cannot run this script. WSL has not been tried.
 
-Unzip the archive (or clone the repository), open Claude Code in that folder or the folder directly above it, and paste this whole block into the chat:
+**Easiest:** open Claude Code in the unzipped folder and type one line - `Read INSTALL.md in this folder and follow it step by step.` ([`INSTALL.md`](INSTALL.md) is the prompt below as a file, byte for byte; the pasted block is the path outside testers have used.)
+
+Or paste it yourself: unzip the archive (or clone the repository), open Claude Code in that folder or the folder directly above it, and paste this whole block into the chat:
 
 ````text
 Install the collab-os plugin for me from the folder I unzipped. Do the steps below in order and report the result of each step in one line.
@@ -18,7 +20,7 @@ Rules for this whole task:
 - No rm, no sudo, never overwrite an existing file, no network requests.
 - If anything is unclear or a step fails, stop and ask me. Do not guess.
 
-1. Find the absolute path of the unzipped collab-os folder: look in the current folder, its subfolders and its parent folders for collab-os/plugin/.claude-plugin/marketplace.json (the current folder may itself be the collab-os folder). If you do not find exactly one, ask me for the path and stop.
+1. Find the absolute path of the unzipped collab-os folder: look in the current folder, its subfolders and its parent folders for plugin/.claude-plugin/marketplace.json, open each one you find and keep only those whose "name" is exactly collab-os. The folder that contains that plugin folder is the collab-os folder, whatever it is called - collab-os, collab-os-main (GitHub's Download ZIP) or a name your unzip tool shortened, such as collab-os-v0. The current folder may itself be that folder. If you do not find exactly one, ask me for the path and stop.
 2. Run `claude plugin marketplace list`. If a marketplace named collab-os is already listed and points at this same folder, just continue. If it points somewhere else, show me both paths and ask whether to replace it; continue only if I say yes, by running `claude plugin marketplace remove collab-os` - tell me first that this also uninstalls the plugin that came from it and deletes its saved options, secrets and data. In either case, then run `claude plugin marketplace add <that absolute path>/plugin`, then `claude plugin install collab-os@collab-os`, then `claude plugin list`. If the list does not show collab-os@collab-os with Status: ✔ enabled, show me the output exactly as printed and stop.
 3. If ~/.config/collab-os/CHARTER.md already exists, do not change it: ask me what to do and stop. Otherwise run `mkdir -p ~/.config/collab-os` and create ~/.config/collab-os/CHARTER.md containing exactly the text between BEGIN and END:
 BEGIN
@@ -49,7 +51,7 @@ END
 
 Everything this prompt does is the same as "Do it by hand" below - read it first, and if you would rather not hand it to the assistant, do it by hand.
 
-One outside tester has taken this paste-in install all the way through (an earlier version stalled once at step 2; that is fixed). How long it takes has not been timed yet - if it stalls, tell us where.
+One outside tester reported that v0.1.4 installed on a new Mac and reinstalled on an existing Mac without problems, using this paste-in prompt (step 1 remarked once that the folder name did not match - the wording above now allows other names; an earlier version stalled once at step 2; that is fixed). How long it takes has not been timed yet - if it stalls, tell us where.
 
 You need: Claude Code, installed and **logged in** (run `claude` once and sign in before you start), and a terminal. git is only needed if you clone instead of unzipping. (Python 3.9+ is only needed later, for the optional tools.)
 
@@ -70,7 +72,7 @@ Steps 1-4 below do exactly what the pasted prompt does.
 
 ### Step 1 - get the files (1 minute)
 
-Unzip the archive you received - it makes a folder named `collab-os`. Or clone this repository into a folder of that name: copy the clone command from the green Code button on GitHub and add `collab-os` as the folder name at the end.
+Unzip the archive you received - it makes a folder named `collab-os` (GitHub's Download ZIP makes `collab-os-main`, and some unzip tools shorten the name, for example to `collab-os-v0` - use the name you see in the `cd` below). Or clone this repository into a folder of that name: copy the clone command from the green Code button on GitHub and add `collab-os` as the folder name at the end.
 
 Then go into the folder:
 
@@ -87,7 +89,7 @@ claude plugin marketplace add ./plugin
 claude plugin install collab-os@collab-os
 ```
 
-(If your terminal is in the folder *above* `collab-os` instead, the first command is `claude plugin marketplace add ./collab-os/plugin`.)
+(If your terminal is in the folder *above* it instead, the first command is `claude plugin marketplace add ./<folder name>/plugin` - for example `./collab-os/plugin` or `./collab-os-main/plugin`.)
 
 `claude plugin list` should now show `collab-os@collab-os` with `Status: ✔ enabled`.
 

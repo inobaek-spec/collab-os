@@ -38,7 +38,9 @@ flowchart LR
 
 macOS + Claude Code 2.1.296 에서 시험했습니다. Linux·Windows 는 다릅니다 — Linux 는 훅과 도구만 확인했고(Claude Code 설치는 미시험), Windows 는 시험하지 않았습니다. 시작 훅은 POSIX 셸 스크립트이고, Windows 에서 Claude Code 는 셸 형식 command 훅을 Git Bash(Git for Windows)로 돌립니다 — Git Bash 가 없으면 PowerShell 로 가는데 이 스크립트는 거기서 돌지 않습니다. WSL 은 시험하지 않았습니다.
 
-압축을 풀고(또는 저장소를 clone 하고) 그 폴더나 바로 위 폴더에서 Claude Code 를 연 뒤, 아래 상자 전체를 대화창에 붙여넣습니다.
+**가장 쉬운 방법:** 압축을 푼 폴더에서 Claude Code 를 열고 한 줄만 칩니다 — `이 폴더의 INSTALL.ko.md 를 읽고 단계대로 그대로 해 줘.` ([`INSTALL.ko.md`](INSTALL.ko.md) 는 아래 상자의 프롬프트를 글자 하나까지 같게 파일로 둔 것입니다. 외부 시험자가 거친 경로는 붙여넣기 상자입니다.)
+
+직접 붙여넣으려면: 압축을 풀고(또는 저장소를 clone 하고) 그 폴더나 바로 위 폴더에서 Claude Code 를 연 뒤, 아래 상자 전체를 대화창에 붙여넣습니다.
 
 <details>
 <summary>설치 프롬프트 — 눌러서 펼친 뒤 상자 전체를 복사</summary>
@@ -51,7 +53,7 @@ macOS + Claude Code 2.1.296 에서 시험했습니다. Linux·Windows 는 다릅
 - rm 금지, sudo 금지, 이미 있는 파일 덮어쓰기 금지, 네트워크 요청 금지.
 - 애매하거나 단계가 실패하면 추측하지 말고 멈춰서 나에게 묻는다.
 
-1. 압축을 푼 collab-os 폴더의 절대경로를 찾는다. 현재 폴더, 그 하위 폴더, 상위 폴더에서 collab-os/plugin/.claude-plugin/marketplace.json 을 찾는다(현재 폴더가 바로 collab-os 폴더일 수도 있다). 정확히 하나를 찾지 못하면 나에게 경로를 묻고 멈춘다.
+1. 압축을 푼 collab-os 폴더의 절대경로를 찾는다. 현재 폴더, 그 하위 폴더, 상위 폴더에서 plugin/.claude-plugin/marketplace.json 을 찾아 하나씩 열어 보고, "name" 이 정확히 collab-os 인 것만 후보로 남긴다. 그 plugin 폴더를 담고 있는 폴더가 collab-os 폴더다 — 이름은 collab-os, collab-os-main(GitHub 의 Download ZIP), 압축 도구가 줄인 이름(예 collab-os-v0) 등 무엇이든 된다. 현재 폴더가 바로 그 폴더일 수도 있다. 정확히 하나를 찾지 못하면 나에게 경로를 묻고 멈춘다.
 2. `claude plugin marketplace list` 를 먼저 실행한다. 목록에 collab-os 라는 마켓플레이스가 이미 있고 바로 이 폴더를 가리키면 그냥 계속한다. 다른 곳을 가리키면 두 경로를 보여 주고 바꿀지 묻는다 — 내가 「예」라고 할 때만 `claude plugin marketplace remove collab-os` 를 실행하되, 그 전에 이 명령이 거기서 설치된 플러그인도 함께 지우고 그 플러그인의 저장 옵션·비밀·데이터도 삭제한다는 것을 알려 준다. 어느 쪽이든 그다음 `claude plugin marketplace add <그 절대경로>/plugin` → `claude plugin install collab-os@collab-os` → `claude plugin list` 를 차례로 실행한다. 목록에 collab-os@collab-os 와 Status: ✔ enabled 가 함께 보이지 않으면 출력을 그대로 보여 주고 멈춘다.
 3. ~/.config/collab-os/CHARTER.md 가 이미 있으면 건드리지 말고 어떻게 할지 묻고 멈춘다. 없으면 `mkdir -p ~/.config/collab-os` 를 실행하고, BEGIN 과 END 사이의 글을 그대로 담은 ~/.config/collab-os/CHARTER.md 를 만든다.
 BEGIN
@@ -84,7 +86,7 @@ END
 
 이 프롬프트가 하는 일 전부는 아래 「직접 하려면」과 같습니다 — 먼저 읽어 보고, 어시스턴트에게 맡기기 싫으면 손으로 하세요.
 
-외부 시험자 한 명이 이 붙여넣기 설치를 끝까지 마쳤습니다(이전 판에서 2단계에서 한 번 멈췄고, 고쳤습니다). 걸리는 시간은 아직 재지 않았습니다 — 멈추면 어디서 멈췄는지 알려 주세요.
+외부 시험자 한 명이 이 붙여넣기 프롬프트로 v0.1.4 를 새 맥에 설치하고 기존 맥에 재설치했는데 둘 다 문제 없었다고 보고했습니다(1단계가 폴더 이름이 다르다고 한 번 말했고 — 위 문구를 다른 이름도 되게 고쳤습니다. 이전 판에서는 2단계에서 한 번 멈췄고, 고쳤습니다). 걸리는 시간은 아직 재지 않았습니다 — 멈추면 어디서 멈췄는지 알려 주세요.
 
 ## 실측
 
@@ -141,21 +143,21 @@ END
 
 Claude Code 가 설치돼 있고 **로그인된** 상태여야 합니다(시작 전에 `claude` 를 한 번 실행해 로그인하세요).
 
-1. **가장 쉬운 방법:** 이 페이지 맨 위 [Claude Code 에 붙여넣어 설치](#claude-code-에-붙여넣어-설치) 의 프롬프트를 Claude Code 에 붙여넣습니다.
+1. **가장 쉬운 방법:** 압축을 푼 폴더에서 Claude Code 를 열고 `이 폴더의 INSTALL.ko.md 를 읽고 단계대로 그대로 해 줘.` 한 줄을 칩니다 — 또는 이 페이지 맨 위 [Claude Code 에 붙여넣어 설치](#claude-code-에-붙여넣어-설치) 의 프롬프트를 Claude Code 에 붙여넣습니다.
 2. **확인** — 아래 「설치됐는지 10초 안에 확인하기」(손으로 설치했다면 먼저 아래 「그다음 헌장 만들기」 상자), 그다음 「설치 확인 — 새 세션 열기」와 「`/collab-os:gate` 시험」까지 차례로.
-3. **직접 하려면**([`QUICKSTART.md`](QUICKSTART.md) 에 영어로 모든 단계가 있습니다) 압축을 풀고(또는 이 저장소를 `collab-os` 폴더로 clone 하고 — 주소는 GitHub 의 초록색 Code 버튼이 보여 줍니다), `cd collab-os` 로 그 폴더에 들어간 뒤:
+3. **직접 하려면**([`QUICKSTART.md`](QUICKSTART.md) 에 영어로 모든 단계가 있습니다) 압축을 풀고(또는 이 저장소를 `collab-os` 폴더로 clone 하고 — 주소는 GitHub 의 초록색 Code 버튼이 보여 줍니다), `cd collab-os` 로 그 폴더에 들어간 뒤(압축을 푼 폴더 이름이 다를 수 있습니다 — GitHub 의 Download ZIP 은 `collab-os-main`, 압축 도구가 줄이면 `collab-os-v0` 같은 이름이 됩니다. 보이는 이름을 쓰세요):
 
 ```
 claude plugin marketplace add ./plugin
 claude plugin install collab-os@collab-os
 ```
 
-(`collab-os` 의 *바로 위* 폴더에서 한다면 첫 명령은 `claude plugin marketplace add ./collab-os/plugin` 입니다.)
+(그 폴더의 *바로 위* 폴더에서 한다면 첫 명령은 `claude plugin marketplace add ./<폴더 이름>/plugin` 입니다 — 예 `./collab-os/plugin`, `./collab-os-main/plugin`.)
 
 **설치됐는지 10초 안에 확인하기** — 터미널에서 `claude plugin list` 를 실행합니다.
 - 성공: 목록에 `collab-os@collab-os` 와 `Status: ✔ enabled` 가 보입니다.
 - `` No plugins installed. Use `claude plugin install` to install a plugin. `` — 설치 단계가 실행되지 않았습니다.
-- `✘ Path does not exist: .../collab-os/plugin`(마켓플레이스 단계에서 나옴) — 다른 폴더에서 실행했습니다. `collab-os` 폴더 안에서 실행하세요(바로 위 폴더에서 할 때는 `./collab-os/plugin` 형을 씁니다).
+- `✘ Path does not exist: .../collab-os/plugin`(마켓플레이스 단계에서 나옴) — 다른 폴더에서 실행했습니다. 압축을 푼 폴더 안에서 실행하세요(바로 위 폴더에서 할 때는 `./<폴더 이름>/plugin` 형을 씁니다).
 - `✘ Failed to install plugin "collab-os@collab-os": Plugin "collab-os" not found in marketplace "collab-os".` — 마켓플레이스 단계를 건너뛰었거나 실패했습니다. 그것부터 실행하세요.
 
 **그다음 헌장 만들기** — 플러그인은 설정 파일이 달리 말하지 않으면 `~/.config/collab-os/CHARTER.md` 를 찾습니다. **아래 상자 전체가 명령 하나입니다. 터미널에 통째로 붙여넣으세요**(헌장 글을 손으로 옮기는 게 아닙니다). 그 경로에 헌장이 이미 있으면 건드리지 않고 그렇다고 말합니다.
