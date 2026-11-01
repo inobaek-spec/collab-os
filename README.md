@@ -1,22 +1,22 @@
 # collab-os
 
-**How to catch your AI when it says something wrong.**
+**Catching your AI when it's confidently wrong.**
 
 *[한국어](README.ko.md)*
 
-This is for people who already use Claude Code, Anthropic's terminal assistant. If you do not have it yet, install it and sign in first - Claude Code's own documentation is at code.claude.com/docs - then come back here.
+This is for people who already use Claude Code, Anthropic's terminal assistant. If you don't have it yet, install it and sign in first (docs: code.claude.com/docs), then come back.
 
-AI assistants are now good enough that most of their mistakes are not obvious. They do not say nonsense; they say "all 40 tests pass", "that file isn't used anywhere", "I've updated both copies" - fluently, plausibly, and sometimes wrongly. If you work with one every day, the expensive errors are the confident ones.
+AI assistants have become good enough that their mistakes are hard to spot. They rarely say anything absurd. They say "all 40 tests pass", "that file isn't used anywhere", "I've updated both copies", and they say it smoothly. Sometimes they're wrong, and if you work with one every day, those confident mistakes are the expensive ones.
 
-collab-os is one person's record of those errors, kept for nine weeks, plus the smallest set of tools that made keeping it possible (built around Claude Code). It is not a framework. All of it rests on one idea:
+collab-os is one person's ledger of those mistakes, kept for nine weeks, together with the small set of tools that made keeping it possible. The assistant wrote each entry, and the tools are built around Claude Code. One idea sits under all of it:
 
-> **Do not trust a claim the system has not shown it can check.**
+> **Don't trust a claim the system hasn't shown it can check.**
 
 ## In three lines
 
-- **The problem:** an AI assistant states wrong things with full confidence, and acts on irreversible things without asking.
-- **What this is:** nine weeks of one person's ledger - 230 wrong claims an AI assistant made, each logged after the fact with who caught it - plus the smallest set of tools that made the logging possible (a charter, a launch gate, two checkers).
-- **What it's not:** a rule file you hope the AI reads. Each piece either makes a skipped step visible, counts the error, or tests the tester first.
+- **The problem:** AI assistants say wrong things with full confidence, and sometimes do irreversible things without asking.
+- **What's here:** counts from nine weeks of one ledger (230 wrong claims, each tagged with who caught it), plus the tools that made the logging possible: a charter, a launch gate and two checkers.
+- **How it differs from a rule file:** a rule file only works if the AI reads it and follows it. These pieces make a skipped step visible, count the misses, and test the checkers themselves first.
 
 ```mermaid
 flowchart LR
@@ -30,15 +30,13 @@ flowchart LR
   G -.->|"before saying '0 found':<br/>plant one case, show it is found"| D
 ```
 
-A template is text you hope the AI reads. This kit does not assume it will: it makes the skipped step visible, counts the miss, tests its own checkers - and it comes with nine weeks of counts.
-
-Start with the cases ([`CASES.md`](CASES.md)) -> the ledger template ([`ledger/LEDGER-TEMPLATE.md`](ledger/LEDGER-TEMPLATE.md)) -> then the quickstart ([`QUICKSTART.md`](QUICKSTART.md)).
+Start here: the cases ([`CASES.md`](CASES.md)), then the ledger template ([`ledger/LEDGER-TEMPLATE.md`](ledger/LEDGER-TEMPLATE.md)), then the quickstart ([`QUICKSTART.md`](QUICKSTART.md), about 15 minutes).
 
 ## Install with Claude Code (paste this)
 
-Tested on macOS with Claude Code 2.1.296. On Linux only the hook and the tools were checked (installing Claude Code there was not tested). Windows is untested: the session-start hook is a POSIX shell script, and on Windows Claude Code runs shell-form command hooks through Git Bash (Git for Windows) - without it they go to PowerShell, which cannot run this script. WSL has not been tried.
+Tested on macOS with Claude Code 2.1.296. On Linux, only the session-start hook and the tools were checked (installing Claude Code there wasn't tested). Windows and WSL haven't been tested. The session-start hook is a POSIX shell script, so on Windows it needs Git Bash (Git for Windows). Without Git Bash, Claude Code runs hooks through PowerShell, and this script won't run there.
 
-**Easiest:** open Claude Code in the unzipped folder and type one line - `Read INSTALL.md in this folder and follow it step by step.` ([`INSTALL.md`](INSTALL.md) is the prompt below as a file, byte for byte; the pasted block is the path outside testers have used.)
+**Easiest:** open Claude Code in the unzipped folder and type one line: `Read INSTALL.md in this folder and follow it step by step.` ([`INSTALL.md`](INSTALL.md) is the prompt below as a file, byte for byte; the pasted block is the path outside testers have used.)
 
 Or paste it yourself: unzip the archive (or clone the repository), open Claude Code in that folder or the folder directly above it, and paste this whole block into the chat:
 
@@ -84,20 +82,20 @@ END
 
 </details>
 
-Everything this prompt does is the same as "Do it by hand" below (the QUICKSTART has the step-by-step version) - read it first, and if you would rather not hand it to the assistant, do it by hand.
+Everything this prompt does is the same as "Do it by hand" below (the QUICKSTART has the step-by-step version). Read it first, and if you would rather not hand it to the assistant, do it by hand.
 
-One outside tester reported that v0.1.4 installed on a new Mac and reinstalled on an existing Mac without problems, using this paste-in prompt (step 1 remarked once that the folder name did not match - the wording above now allows other names; an earlier version stalled once at step 2; that is fixed). How long it takes has not been timed yet - if it stalls, tell us where.
+One outside tester reported that v0.1.4 installed on a new Mac and reinstalled on an existing Mac without problems, using this paste-in prompt. Step 1 remarked once that the folder name did not match; the wording above now allows other names. An earlier version stalled once at step 2; that is fixed. How long it takes has not been timed yet. If it stalls, tell us where.
 
 ## Measured
 
 | | |
 |---|---|
-| Period | One user's claim-error ledger, 2026-08-21 -> 2026-10-23 (63 days - nine weeks; counted 2026-10-23 10:24 with `tools/ledger_count.py claims --profile private` plus one `--alias` that maps the user's own name to `human`) |
-| Wrong claims logged | 230 numbered entries (a suffixed number such as 12b counts as its own entry) - class A 32 · B 60 · C 100 · D 38 (A quoted instead of measured · B broken measurement · C partial lookup, total claim · D other - definitions in `ledger/LEDGER-TEMPLATE.md`) |
+| Period | One user's claim-error ledger, 2026-08-21 -> 2026-10-23 (63 days, nine weeks). Counted 2026-10-23 10:24 with `tools/ledger_count.py claims --profile private` plus one `--alias` that maps the user's own name to `human` |
+| Wrong claims logged | 230 numbered entries (a suffixed number such as 12b counts as its own entry). Class A 32 · B 60 · C 100 · D 38 (A quoted instead of measured · B broken measurement · C partial lookup, total claim · D other; definitions in `ledger/LEDGER-TEMPLATE.md`) |
 | Definition of "entry" | A dated heading with a number and a class. Suffixed numbers (12b, 161-a) are separate entries; headings marked candidate or withdrawn are excluded; plain numbers only would give 216. Unnumbered headings (4) are not counted |
-| Who caught them | Each entry's detector field, matched against the four words in `ledger/CODEBOOK.md` section 3a: the assistant itself 102 (44%) · independent review by a second model 75 (33%) · a person 22 (10%) · runtime measurement 14 (6%) · unclassifiable 17 (7%) - sums to 230 |
+| Who caught them | Each entry's detector field, matched against the four words in `ledger/CODEBOOK.md` section 3a: the assistant itself 102 (44%) · independent review by a second model 75 (33%) · a person 22 (10%) · runtime measurement 14 (6%) · unclassifiable 17 (7%). Sums to 230 |
 | Before the ledger existed | 21 retroactively collected cases: the assistant itself caught 4 of 21. **Not comparable with the row above**: these were pulled afterwards from change and decision records that happened to mention them, so the whole retroactive set is under-counted; self-caught cases may have been missed more often (not measured), and the ledger's own rule ("log your own wrong claim at once") is what creates the self-caught category |
-| Second-model cross-checks | 47 independent cross-checks of decision cards, code and documents by a second model, 2026-09-30 -> 2026-10-23 (the log has 51 rows; 4 that were not completed cross-checks - one never run, one never sent, one advice request, one reading later ruled invalid - are not counted); findings rejected after re-verification: 1 recorded as of 2026-10-23 |
+| Second-model cross-checks | 47 independent cross-checks of decision cards, code and documents by a second model, 2026-09-30 -> 2026-10-23. The log has 51 rows; 4 that were not completed cross-checks (one never run, one never sent, one advice request, one reading later ruled invalid) are not counted. Findings rejected after re-verification: 1 recorded as of 2026-10-23 |
 
 **These are counts, not a controlled experiment, and the rows are not a before/after comparison.** The ledger changes what gets noticed and what gets recorded, as well as what gets caught; nothing here shows that the ledger made the assistant catch more of its own errors.
 
@@ -105,9 +103,9 @@ One outside tester reported that v0.1.4 installed on a new Mac and reinstalled o
 
 **Machine-side claim checking exists.** Tools such as `lc198707/anti-lie` (which describes itself as an "LLM Claim Auditing Layer"), and similar projects, have a machine judge a claim at the moment it is produced. They audit a claim when it is made.
 
-**Action gates exist.** Hooks and gates that stop irreversible actions exist too - for example `Myr-Aya/GouvernAI-claude-code-plugin` (runtime guardrails for Claude Code), and a growing number of governance hooks for Claude Code. The `/collab-os:gate` command in this repository belongs to that same category; it is the first thing to try in the quickstart, not the point of the project.
+**Action gates exist.** Hooks and gates that stop irreversible actions exist too, for example `Myr-Aya/GouvernAI-claude-code-plugin` (runtime guardrails for Claude Code), and a growing number of governance hooks for Claude Code. The `/collab-os:gate` command in this repository belongs to that same category; it is the first thing to try in the quickstart, not the point of the project.
 
-**What we could not find** is a ledger kept *after* the fact - the assistant writes every entry, whoever caught the error - with the detector classified for each entry (the assistant itself / a second model / the human / runtime measurement), a negative control before any "zero", and nine weeks of counts published. On 2026-10-13 we looked at seven neighbouring projects on GitHub (claim auditors, governance hooks, human-in-the-loop gates); six were found, one was not. None of the six had all of these together: none classified the detector, two had a negative control, and of the five whose ledgers we could check none kept an after-the-fact ledger (one was not checked). If you know one, please open an issue.
+**What we could not find** is a ledger kept *after* the fact, where the assistant writes every entry, whoever caught the error, with the detector classified for each entry (the assistant itself / a second model / the human / runtime measurement), a negative control before any "zero", and nine weeks of counts published. On 2026-10-13 we looked at seven neighbouring projects on GitHub (claim auditors, governance hooks, human-in-the-loop gates); six were found, one was not. None of the six had all of these together: none classified the detector, two had a negative control, and of the five whose ledgers we could check none kept an after-the-fact ledger (one was not checked). If you know one, please open an issue.
 
 The difference is not a smarter checker. It is the record.
 
@@ -116,26 +114,26 @@ The difference is not a smarter checker. It is the record.
 | Piece | What it is | Start here |
 |---|---|---|
 | Cases | Short, anonymised stories of what these pieces actually caught | [`CASES.md`](CASES.md) |
-| Claim-error ledger | A format for recording the claims your assistant got wrong, by kind (A-D), with the **negative control** rule (here: a control for the claim "zero" - a planted positive that the same command must find) | [`ledger/LEDGER-TEMPLATE.md`](ledger/LEDGER-TEMPLATE.md) |
+| Claim-error ledger | A format for recording the claims your assistant got wrong, by kind (A-D), with the **negative control** rule (here: a control for the claim "zero", a planted positive that the same command must find) | [`ledger/LEDGER-TEMPLATE.md`](ledger/LEDGER-TEMPLATE.md) |
 | Root-cause codebook | Ten root causes (R1-R10) and a decision order, so two independent classifiers can agree on *why* | [`ledger/CODEBOOK.md`](ledger/CODEBOOK.md) |
-| Tools | `tools/claim_scan.py` - a thermometer for "does it state the scope when it states a number?"; `tools/rule_health.py` - dead pointers, numbering gaps and rule-count drift; `tools/_config.py` - one place that knows your paths; `tools/ledger_count.py` - counts the ledger, the gate log and the cases by class and detector, always with the denominator; `tools/negative_control.py` - plants a known case in a temporary copy before you report "0 found" | [`tools/`](tools/) |
-| Charter template | Ten articles - each with the failure it exists to prevent | [`CHARTER-TEMPLATE.md`](CHARTER-TEMPLATE.md) |
+| Tools | `tools/claim_scan.py`: a thermometer for "does it state the scope when it states a number?"; `tools/rule_health.py`: dead pointers, numbering gaps and rule-count drift; `tools/_config.py`: one place that knows your paths; `tools/ledger_count.py`: counts the ledger, the gate log and the cases by class and detector, always with the denominator; `tools/negative_control.py`: plants a known case in a temporary copy before you report "0 found" | [`tools/`](tools/) |
+| Charter template | Ten articles, each with the failure it exists to prevent | [`CHARTER-TEMPLATE.md`](CHARTER-TEMPLATE.md) |
 | Plugin for Claude Code | `/collab-os:gate` (decision card before risky work), `/collab-os:recon` (check reality before asserting), `/collab-os:handoff` (move work between sessions or models without losing the plot), plus a session-start hook | [`plugin/collab-os/README.md`](plugin/collab-os/README.md) |
 | Quickstart | Four principles and one command, about 15 minutes to the first gate | [`QUICKSTART.md`](QUICKSTART.md) |
 | Publishing tools | The allowlist exporter and word-floor leak scanner this repository is itself published with | [`export/`](export/) |
 
 ## The four ideas that carry everything
 
-1. **Reality is the source of truth.** A count copied from a README is a quote, not a measurement. "Real" means what the running code path actually reads - not the file that looks right.
+1. **Reality is the source of truth.** A count copied from a README is a quote, not a measurement. "Real" means what the running code path actually reads, not the file that looks right.
 2. **No completion without verification.** "Done" means it was run and checked. Changes that are hard to undo, or that change the structure, get a second pair of eyes that did not share the context that produced them.
 3. **Irreversible things belong to the human.** Anything that reaches people, money or running systems waits for approval. Without approval, the default is "don't".
-4. **Start from purpose.** Decide what "finished" means before choosing a tool or a method. Changing track is allowed; drifting without knowing is not - a change of track is a declared decision.
+4. **Start from purpose.** Decide what "finished" means before choosing a tool or a method. Changing track is allowed; drifting without knowing is not. A change of track is a declared decision.
 
-The other six articles in the charter - outputs as files, the human's understanding as the bottleneck, quality floor versus cheapest path, refinement over accumulation, humans make the rules, and "finished means it changed something" - grow out of these four. The starter charter the installer writes has these four; the template `CHARTER-TEMPLATE.md` has all ten.
+The other six articles in the charter (outputs as files, the human's understanding as the bottleneck, quality floor versus cheapest path, refinement over accumulation, humans make the rules, and "finished means it changed something") grow out of these four. The starter charter the installer writes has these four; the template `CHARTER-TEMPLATE.md` has all ten.
 
 ## Why a ledger of wrong claims?
 
-Most safety nets protect artifacts: tests, linters, type checkers. Almost nothing protects the assistant's *sentences*, and those sentences are what you make decisions on. Writing down each wrong claim, by kind, turns "it keeps doing that" into a count - and a count tells you when to stop adding rules and build a device instead.
+Most safety nets protect artifacts: tests, linters, type checkers. Almost nothing protects the assistant's *sentences*, and those sentences are what you make decisions on. Writing down each wrong claim, by kind, turns "it keeps doing that" into a count, and a count tells you when to stop adding rules and build a device instead.
 
 The single most useful rule in the ledger is the **negative control**: before anyone reports "0 found", they show that the same command finds one planted case. A search that cannot find a planted needle has not shown the haystack is empty.
 
@@ -143,47 +141,47 @@ The single most useful rule in the ledger is the **negative control**: before an
 
 You need Claude Code, installed and **logged in** (run `claude` once and sign in before you start).
 
-1. **Easiest:** open Claude Code in the unzipped folder and type `Read INSTALL.md in this folder and follow it step by step.` - or paste the prompt from [Install with Claude Code](#install-with-claude-code-paste-this) at the top of this page into Claude Code.
-2. **Check** - see below.
-3. **Or do it by hand** ([`QUICKSTART.md`](QUICKSTART.md) has every step). Unzip the archive (or clone this repository - the green Code button on GitHub shows the URL - into a folder named `collab-os`), go into the folder with `cd collab-os` (the unzipped folder may be called something else - `collab-os-main` from GitHub's Download ZIP, or a shortened name such as `collab-os-v0`; use the name you see), then:
+1. **Easiest:** open Claude Code in the unzipped folder and type `Read INSTALL.md in this folder and follow it step by step.`, or paste the prompt from [Install with Claude Code](#install-with-claude-code-paste-this) at the top of this page into Claude Code.
+2. **Check**: see below.
+3. **Or do it by hand** ([`QUICKSTART.md`](QUICKSTART.md) has every step). Unzip the archive (or clone this repository into a folder named `collab-os`; the green Code button on GitHub shows the URL), go into the folder with `cd collab-os`, then run the two commands below. The unzipped folder may be called something else, such as `collab-os-main` from GitHub's Download ZIP or a shortened name like `collab-os-v0`; use the name you see.
 
 ```
 claude plugin marketplace add ./plugin
 claude plugin install collab-os@collab-os
 ```
 
-(From the folder *above* it, the first command is `claude plugin marketplace add ./<folder name>/plugin` - for example `./collab-os/plugin` or `./collab-os-main/plugin`.)
+(From the folder *above* it, the first command is `claude plugin marketplace add ./<folder name>/plugin`, for example `./collab-os/plugin` or `./collab-os-main/plugin`.)
 
-**Did it install? Check in ten seconds** - in a terminal, run `claude plugin list`:
+**Did it install? Check in ten seconds**: in a terminal, run `claude plugin list`:
 - Success: the list shows `collab-os@collab-os` with `Status: ✔ enabled`.
-- `` No plugins installed. Use `claude plugin install` to install a plugin. `` - the install step did not run.
-- `✘ Path does not exist: .../collab-os/plugin` (printed by the marketplace step) - you ran it from the wrong folder; run it from inside the unzipped folder (or use `./<folder name>/plugin` from the folder above).
-- `✘ Failed to install plugin "collab-os@collab-os": Plugin "collab-os" not found in marketplace "collab-os".` - the marketplace step was skipped or failed; run it first.
+- `` No plugins installed. Use `claude plugin install` to install a plugin. ``: the install step did not run.
+- `✘ Path does not exist: .../collab-os/plugin` (printed by the marketplace step): you ran it from the wrong folder; run it from inside the unzipped folder (or use `./<folder name>/plugin` from the folder above).
+- `✘ Failed to install plugin "collab-os@collab-os": Plugin "collab-os" not found in marketplace "collab-os".`: the marketplace step was skipped or failed; run it first.
 
-Then put a charter at `~/.config/collab-os/CHARTER.md` (or create `~/.config/collab-os/config.json` pointing at yours - for its contents see [`collab-os.config.example.json`](collab-os.config.example.json)). For the hook message in Korean, put `"lang": "ko"` in the config. The four-article starter charter is in QUICKSTART Step 3 as one paste-in command; the ten-article template is `CHARTER-TEMPLATE.md`. Then start Claude Code afresh (quit the current session and run `claude` again): the session-start hook announces where your charter is.
+Then put a charter at `~/.config/collab-os/CHARTER.md` (or create `~/.config/collab-os/config.json` pointing at yours; for its contents see [`collab-os.config.example.json`](collab-os.config.example.json)). For the hook message in Korean, put `"lang": "ko"` in the config. The four-article starter charter is in QUICKSTART Step 3 as one paste-in command; the ten-article template is `CHARTER-TEMPLATE.md`. Then start Claude Code afresh (quit the current session and run `claude` again): the session-start hook announces where your charter is.
 
 The Python tools need Python 3.9 or newer and nothing else.
 
 ## You do not need the slash command most of the time
 
-The three procedures are **skills**. Claude Code shows the model each skill's one-paragraph description, and the model is meant to call the skill itself when a task matches it - a new asset, a multi-step job, anything that touches something running. So in daily use you just ask for the work. If the task is risky, a decision card should appear before anything happens, without you typing a command.
+The three procedures are **skills**. Claude Code shows the model each skill's one-paragraph description, and the model is meant to call the skill itself when a task matches it: a new asset, a multi-step job, anything that touches something running. So in daily use you just ask for the work. If the task is risky, a decision card should appear before anything happens, without you typing a command.
 
 `/collab-os:gate <task>` is the manual button. Use it to check that the gate works in your setup, or to force a card when you want one.
 
-The gate card is always the same five boxes in the same order - that is the format the gate skill specifies. One tester (one person so far) said this was what they liked about it: the "things to decide" they usually get at the end of a task does not come as a table, while the card is always the same table.
+The gate card is always the same five boxes in the same order; that is the format the gate skill specifies. One tester (one person so far) said this was what they liked about it: the "things to decide" they usually get at the end of a task does not come as a table, while the card is always the same table.
 
-**Unmeasured:** how often the gate fires on its own outside the author's machine. Tester reports are being collected - cards issued without the command, risky tasks that went ahead without a card, and cards on tasks that did not need one. When there are numbers, this line changes. If you have tried it, tell us.
+**Unmeasured:** how often the gate fires on its own outside the author's machine. Tester reports are being collected: cards issued without the command, risky tasks that went ahead without a card, and cards on tasks that did not need one. When there are numbers, this line changes. If you have tried it, tell us.
 
 ## How this differs from Claude Code's own safeguards
 
-Claude Code has safeguards of its own: it asks before running a command, and one tester saw it stop a dangerous command right before it ran - some of this, that tester reports, still fires in auto-approve mode. Those safeguards work **per command, right before execution**. As the tester put it, deleting a local file is already caught. The gate is not for that.
+Claude Code has safeguards of its own: it asks before running a command, and one tester saw it stop a dangerous command right before it ran. Some of this, that tester reports, still fires in auto-approve mode. Those safeguards work **per command, right before execution**. As the tester put it, deleting a local file is already caught. The gate is not for that.
 
 The gate works **per task: once, before the work starts**, and asks "what does this touch, and how do we undo it?". In the tester's words, it is for work where **the command looks harmless but the result travels far**:
 
-1. A one-line edit to a file that a running program reads - the edit is the deployment.
-2. Registering a scheduled job - the effect arrives tomorrow, not now.
-3. Anything that leaves the machine - mail, `git push`, a deploy.
-4. Anything that costs money - API calls, paid services.
+1. A one-line edit to a file that a running program reads. The edit is the deployment.
+2. Registering a scheduled job. The effect arrives tomorrow, not now.
+3. Anything that leaves the machine: mail, `git push`, a deploy.
+4. Anything that costs money: API calls, paid services.
 
 If a built-in safeguard already catches it, it is not a gate case.
 

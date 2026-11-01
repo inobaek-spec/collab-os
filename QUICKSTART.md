@@ -6,7 +6,7 @@ This is for people who already use Claude Code, Anthropic's terminal assistant. 
 
 ## Install with Claude Code (paste this)
 
-Tested on macOS with Claude Code 2.1.296. On Linux only the hook and the tools were checked (installing Claude Code there was not tested). Windows is untested: the session-start hook is a POSIX shell script, and on Windows Claude Code runs shell-form command hooks through Git Bash (Git for Windows) - without it they go to PowerShell, which cannot run this script. WSL has not been tried.
+Tested on macOS with Claude Code 2.1.296. On Linux, only the session-start hook and the tools were checked (installing Claude Code there wasn't tested). Windows and WSL haven't been tested. The session-start hook is a POSIX shell script, so on Windows it needs Git Bash (Git for Windows). Without Git Bash, Claude Code runs hooks through PowerShell, and this script won't run there.
 
 **Easiest:** open Claude Code in the unzipped folder and type one line - `Read INSTALL.md in this folder and follow it step by step.` ([`INSTALL.md`](INSTALL.md) is the prompt below as a file, byte for byte; the pasted block is the path outside testers have used.)
 
