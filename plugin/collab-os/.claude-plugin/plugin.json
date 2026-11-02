@@ -1,6 +1,6 @@
 {
   "name": "collab-os",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Launch gate (5-box decision card), recon before you assert, and handoff blocks. Procedures only - the rules live in your own charter, located through the config file named by COLLAB_OS_CONFIG or ~/.config/collab-os/config.json (built-in defaults otherwise).",
   "author": {
     "name": "collab-os contributors"

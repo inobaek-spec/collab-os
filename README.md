@@ -34,7 +34,7 @@ Start here: the cases ([`CASES.md`](CASES.md)), then the ledger template ([`ledg
 
 ## Install with Claude Code (paste this)
 
-Tested on macOS with Claude Code 2.1.296. On Linux, only the session-start hook and the tools were checked (installing Claude Code there wasn't tested). Windows and WSL haven't been tested. The session-start hook is a POSIX shell script, so on Windows it needs Git Bash (Git for Windows). Without Git Bash, Claude Code runs hooks through PowerShell, and this script won't run there.
+Tested on macOS with Claude Code 2.1.296 (v0.1.4, by an outside tester) and 2.1.316 (v0.1.5 probes by the author). On Linux, only the session-start hook and the tools were checked (installing Claude Code there wasn't tested). Windows and WSL haven't been tested. The session-start hook is a POSIX shell script, so on Windows it needs Git Bash (Git for Windows). Without Git Bash, Claude Code runs hooks through PowerShell, and this script won't run there.
 
 **Easiest:** open Claude Code in the unzipped folder and type one line: `Read INSTALL.md in this folder and follow it step by step.` ([`INSTALL.md`](INSTALL.md) is the prompt below as a file, byte for byte; the pasted block is the path outside testers have used.)
 
@@ -48,12 +48,12 @@ Install the collab-os plugin for me from the folder I unzipped. Do the steps bel
 
 Rules for this whole task:
 - Write nothing outside: the collab-os folder, ~/.config/collab-os/, and what the `claude plugin` commands write on their own: ~/.claude/plugins/, the extraKnownMarketplaces and enabledPlugins entries in ~/.claude/settings.json, and Claude Code's own state file ~/.claude.json (plus its backup under ~/.claude/backups/). Do not edit Claude Code's own files (settings.json, .claude.json) yourself.
-- No rm, no sudo, never overwrite an existing file, no network requests.
+- No rm, no sudo, never overwrite an existing file (the one exception: appending to the charter in step 3, after a backup, and only after I say yes), no network requests.
 - If anything is unclear or a step fails, stop and ask me. Do not guess.
 
 1. Find the absolute path of the unzipped collab-os folder: look in the current folder, its subfolders and its parent folders for plugin/.claude-plugin/marketplace.json, open each one you find and keep only those whose "name" is exactly collab-os. The folder that contains that plugin folder is the collab-os folder, whatever it is called - collab-os, collab-os-main (GitHub's Download ZIP) or a name your unzip tool shortened, such as collab-os-v0. The current folder may itself be that folder. If you do not find exactly one, ask me for the path and stop.
 2. Run `claude plugin marketplace list`. If a marketplace named collab-os is already listed and points at this same folder, just continue. If it points somewhere else, show me both paths and ask whether to replace it; continue only if I say yes, by running `claude plugin marketplace remove collab-os` - tell me first that this also uninstalls the plugin that came from it and deletes its saved options, secrets and data. In either case, then run `claude plugin marketplace add <that absolute path>/plugin`, then `claude plugin install collab-os@collab-os`, then `claude plugin list`. If the list does not show collab-os@collab-os with Status: ✔ enabled, show me the output exactly as printed and stop.
-3. If ~/.config/collab-os/CHARTER.md already exists, do not change it: ask me what to do and stop. Otherwise run `mkdir -p ~/.config/collab-os` and create ~/.config/collab-os/CHARTER.md containing exactly the text between BEGIN and END:
+3. Find the active charter path the same way the plugin does. If the environment variable COLLAB_OS_CONFIG is set to a non-empty value, the path is the "charter" value in the JSON file it names; if that file is missing, empty or not valid JSON, the path is the default ~/.config/collab-os/CHARTER.md (do not fall back to config.json - say which case you hit). If the variable is unset or empty and ~/.config/collab-os/config.json exists and is valid JSON, the path is its "charter" value. Otherwise, and whenever the "charter" key is absent, empty or not a string, the path is ~/.config/collab-os/CHARTER.md. A relative value counts from the config file's folder; ~ is your home. Then: if no file is at that path, run `mkdir -p ~/.config/collab-os` (or create that path's folder) and create the file containing exactly the text between BEGIN and END. If a file is there, do not change it yet: compare its `## I<number>.` headings with the four between BEGIN and END (I2, I3, I4, I8) and show me the path, the headings that are missing, the exact text you would append, the backup name <that path>.bak-<YYYYMMDD-HHMMSS> and the restore command cp "<backup>" "<that path>". Then ask me. Only if I answer yes: copy the file to the backup name first, then append the missing articles to the end of the file - never overwrite, reorder or edit what is there. If nothing is missing, say so and continue. If the file has no `## I<number>.` headings at all (a charter in your own form), show the four articles, say you cannot tell what is missing, and ask the same way - "no" leaves it untouched:
 BEGIN
 # My charter
 
@@ -158,7 +158,7 @@ claude plugin install collab-os@collab-os
 - `✘ Path does not exist: .../collab-os/plugin` (printed by the marketplace step): you ran it from the wrong folder; run it from inside the unzipped folder (or use `./<folder name>/plugin` from the folder above).
 - `✘ Failed to install plugin "collab-os@collab-os": Plugin "collab-os" not found in marketplace "collab-os".`: the marketplace step was skipped or failed; run it first.
 
-Then put a charter at `~/.config/collab-os/CHARTER.md` (or create `~/.config/collab-os/config.json` pointing at yours; for its contents see [`collab-os.config.example.json`](collab-os.config.example.json)). For the hook message in Korean, put `"lang": "ko"` in the config. The four-article starter charter is in QUICKSTART Step 3 as one paste-in command; the ten-article template is `CHARTER-TEMPLATE.md`. Then start Claude Code afresh (quit the current session and run `claude` again): the session-start hook announces where your charter is.
+Then put a charter at `~/.config/collab-os/CHARTER.md` (or create `~/.config/collab-os/config.json` pointing at yours; for its contents see [`collab-os.config.example.json`](collab-os.config.example.json)). For the hook message in Korean, put `"lang": "ko"` in the config. The four-article starter charter is in QUICKSTART Step 3 as one paste-in command; the ten-article template is `CHARTER-TEMPLATE.md`. Then start Claude Code afresh (quit the current session and run `claude` again): the session-start hook announces where your charter is. Updating or reverting the plugin never changes your charter; the paste-in install prompt appends missing starter articles only after you say yes, after a backup.
 
 The Python tools need Python 3.9 or newer and nothing else.
 
@@ -241,6 +241,10 @@ I'll wait for your confirmation before doing any of it.
 
 </details>
 
+Since v0.1.5 a `Rules checked:` line follows the table, before the rollback line; this card predates it.
+
+**Rules checked.** From v0.1.5 every gate card, and every recon result that leads to a change, ends with one line: which rule files (`.md`) were read and whether the change overlaps or conflicts with them. "None" names the files it covers. A tester asked for exactly this (2026-10-26). It covers `.md` rules, not code, and it appears only when the gate or the recon fires.
+
 ## Honest limits
 
 - **The plugin enforces nothing.** It announces where your charter is and gives you procedures; the model still has to follow them. The value is in making skipped steps visible, not impossible. The publishing tools in `export/` are the one exception: they refuse to promote a tree that fails the leak check.
@@ -251,7 +255,7 @@ I'll wait for your confirmation before doing any of it.
 
 ## Status
 
-v0.1.4 - first public draft (plugin 0.1.4). Feedback, especially "I tried the quickstart and step N did not match what I saw", is the most useful thing you can send.
+v0.1.5 - second public draft (plugin 0.1.5). What changed since v0.1.4 is in [CHANGELOG.md](CHANGELOG.md). Feedback, especially "I tried the quickstart and step N did not match what I saw", is the most useful thing you can send.
 
 ## License
 

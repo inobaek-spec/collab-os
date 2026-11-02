@@ -8,7 +8,7 @@
     {
       "name": "collab-os",
       "source": "./collab-os",
-      "version": "0.1.4",
+      "version": "0.1.5",
       "description": "Launch gate (5-box decision card), recon before you assert, and handoff blocks for Claude Code. Holds procedures only; the rules live in your own charter file."
     }
   ]

@@ -31,7 +31,7 @@ Installing a hook, registering a scheduled job, or writing into a repository you
 ## Procedure
 
 1. **Recon first** - follow the `recon` skill and put its result *before* the card.
-2. **Present one card** (five boxes, below).
+2. **Present one card** (five boxes plus the Rules checked line, below).
 3. **Stop.** Do not move to the real work before the human confirms.
 4. Where a fork needs a human decision, lay out the material and the options; do not pick one and carry on.
 
@@ -45,7 +45,12 @@ Installing a hook, registering a scheduled job, or writing into a repository you
 | 4. Where to do it | A one-line verdict on which surface or tool should do this, plus a request to confirm (a verdict, not a questionnaire) |
 | 5. Sources to load | The files to read before starting (the charter, the target, its tests) |
 
-The gate card is always this table as it stands: do not rename the boxes or change their order. Add one more line whenever the work is hard to undo: **how to roll it back** - it goes directly under the table, not inside a box.
+The gate card is always this table as it stands: do not rename the boxes or change their order. Two lines follow the table, in this order, never inside a box:
+
+1. **Rules checked** - always. The rule files you read for this task, by path, and whether the planned change overlaps or conflicts with any of them: the charter the hook announced, the always-loaded rules file the hook announced, and the target's own policy `.md` files (a `CLAUDE.md` or `AGENTS.md` next to the target, a README's rules section). Write it as `Rules checked: <paths> · overlap/conflict: <what, or "none found in" the files listed>`. A bare "none" is not an answer: "none" names the files it covers, exactly as an absence claim in recon says how far the lookup went. Code is not in scope of this line - say so if asked. If the hook found no charter, `charter not loaded` is the first entry.
+2. **How to roll it back** - whenever the work is hard to undo. It goes directly under the Rules checked line.
+
+Why the first line is always there: a reader who wonders "did you check this against my existing rules?" should not have to ask (tester feedback, 2026-10-26). The line appears when the gate or the recon fires; a plain chore has neither.
 
 ## Choosing where to do it (box 4)
 

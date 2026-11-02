@@ -1,5 +1,5 @@
 #!/bin/sh
-# collab-os v0.1.4 - SessionStart hook: tells the session where the charter and logs are.
+# collab-os v0.1.5 - SessionStart hook: tells the session where the charter and logs are.
 #
 # LIMITS (read first)
 #  - Never blocks: every path ends in exit 0. A bug here must not stop a session.
@@ -53,6 +53,7 @@ CHARTER="$(resolve "$(read_key charter)" "~/.config/collab-os/CHARTER.md")"
 GATE_LOG="$(resolve "$(read_key gate_log)" "~/.config/collab-os/GATE-LOG.md")"
 CLAIM_LOG="$(resolve "$(read_key claim_log)" "~/.config/collab-os/CLAIM-LOG.md")"
 HANDOFF_DIR="$(resolve "$(read_key handoff_dir)" "~/.config/collab-os/handoffs")"
+RULES_FILE="$(resolve "$(read_key rules_file)" "~/.claude/CLAUDE.md")"
 LANG_SET="$(read_key lang)"
 [ "$LANG_SET" = "ko" ] || LANG_SET="en"
 
@@ -79,6 +80,7 @@ cat <<EOF
 - 표면·모델 전환: 인계 블록을 먼저 내고 파일로 남긴다($HANDOFF_DIR). -> /collab-os:handoff
 - 게이트 예외(안 걸림·과하게 걸림·잘못 판정)만 기록: $GATE_LOG
 - 틀린 주장 장부: $CLAIM_LOG
+- 상시 적재 규칙 파일(Claude Code 가 매 세션 읽는 파일): $RULES_FILE - 게이트 카드·정찰 결과의 「Rules checked」 줄에 헌장과 함께 적는다.
 승인이 없으면 기본값은 '안 한다'. 직접 확인한 사실은 [observed 날짜], 사람이 말한 것만 [stated].
 EOF
 else
@@ -91,6 +93,7 @@ cat <<EOF
 - Surface or model switch: print a handoff block first and save it as a file ($HANDOFF_DIR). -> /collab-os:handoff
 - Gate exceptions only (missed, over-fired, misjudged): $GATE_LOG
 - Claim-error ledger: $CLAIM_LOG
+- Always-loaded rules file (what Claude Code reads every session): $RULES_FILE - name it, with the charter, in the "Rules checked" line of a gate card or recon result.
 Without approval the default is "don't". Mark what you checked yourself as [observed DATE] and what the human told you as [stated].
 EOF
 fi

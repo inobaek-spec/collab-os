@@ -34,7 +34,7 @@ flowchart LR
 
 ## Claude Code에 붙여넣어 설치
 
-macOS + Claude Code 2.1.296에서 시험했습니다. Linux·Windows는 다릅니다. Linux에서는 시작 훅과 도구만 확인했고(Claude Code 설치는 해 보지 않음), Windows와 WSL은 시험하지 않았습니다. 시작 훅이 POSIX 셸 스크립트라서 Windows에서는 Git Bash(Git for Windows)가 있어야 돕니다. Git Bash가 없으면 Claude Code가 훅을 PowerShell로 돌리는데, 이 스크립트는 거기서 돌지 않습니다.
+macOS + Claude Code 2.1.296(v0.1.4, 외부 시험자)과 2.1.316(v0.1.5, 작성자 프로브)에서 시험했습니다. Linux·Windows는 다릅니다. Linux에서는 시작 훅과 도구만 확인했고(Claude Code 설치는 해 보지 않음), Windows와 WSL은 시험하지 않았습니다. 시작 훅이 POSIX 셸 스크립트라서 Windows에서는 Git Bash(Git for Windows)가 있어야 돕니다. Git Bash가 없으면 Claude Code가 훅을 PowerShell로 돌리는데, 이 스크립트는 거기서 돌지 않습니다.
 
 **가장 쉬운 방법:** 압축을 푼 폴더에서 Claude Code를 열고 한 줄만 칩니다. `이 폴더의 INSTALL.ko.md를 읽고 단계대로 그대로 해 줘.` ([`INSTALL.ko.md`](INSTALL.ko.md)는 아래 상자의 프롬프트를 글자 하나까지 같게 파일로 둔 것입니다. 외부 시험자가 거친 경로는 붙여넣기 상자입니다.)
 
@@ -48,12 +48,12 @@ macOS + Claude Code 2.1.296에서 시험했습니다. Linux·Windows는 다릅�
 
 이 작업 전체의 규칙:
 - 쓰는 곳은 collab-os 폴더, ~/.config/collab-os/, 그리고 `claude plugin` 명령이 스스로 쓰는 것뿐이다: ~/.claude/plugins/, ~/.claude/settings.json 의 extraKnownMarketplaces·enabledPlugins 항목, Claude Code 자체 상태 파일 ~/.claude.json(과 ~/.claude/backups/ 아래 백업). Claude Code 자체 파일(settings.json, .claude.json)은 직접 고치지 않는다. 그 밖에는 아무것도 쓰지 않는다.
-- rm 금지, sudo 금지, 이미 있는 파일 덮어쓰기 금지, 네트워크 요청 금지.
+- rm 금지, sudo 금지, 이미 있는 파일 덮어쓰기 금지(단 하나의 예외: 3단계에서 백업을 만든 뒤, 내가 「예」라고 한 뒤에만 헌장 끝에 덧붙이기), 네트워크 요청 금지.
 - 애매하거나 단계가 실패하면 추측하지 말고 멈춰서 나에게 묻는다.
 
 1. 압축을 푼 collab-os 폴더의 절대경로를 찾는다. 현재 폴더, 그 하위 폴더, 상위 폴더에서 plugin/.claude-plugin/marketplace.json 을 찾아 하나씩 열어 보고, "name" 이 정확히 collab-os 인 것만 후보로 남긴다. 그 plugin 폴더를 담고 있는 폴더가 collab-os 폴더다 — 이름은 collab-os, collab-os-main(GitHub 의 Download ZIP), 압축 도구가 줄인 이름(예 collab-os-v0) 등 무엇이든 된다. 현재 폴더가 바로 그 폴더일 수도 있다. 정확히 하나를 찾지 못하면 나에게 경로를 묻고 멈춘다.
 2. `claude plugin marketplace list` 를 먼저 실행한다. 목록에 collab-os 라는 마켓플레이스가 이미 있고 바로 이 폴더를 가리키면 그냥 계속한다. 다른 곳을 가리키면 두 경로를 보여 주고 바꿀지 묻는다 — 내가 「예」라고 할 때만 `claude plugin marketplace remove collab-os` 를 실행하되, 그 전에 이 명령이 거기서 설치된 플러그인도 함께 지우고 그 플러그인의 저장 옵션·비밀·데이터도 삭제한다는 것을 알려 준다. 어느 쪽이든 그다음 `claude plugin marketplace add <그 절대경로>/plugin` → `claude plugin install collab-os@collab-os` → `claude plugin list` 를 차례로 실행한다. 목록에 collab-os@collab-os 와 Status: ✔ enabled 가 함께 보이지 않으면 출력을 그대로 보여 주고 멈춘다.
-3. ~/.config/collab-os/CHARTER.md 가 이미 있으면 건드리지 말고 어떻게 할지 묻고 멈춘다. 없으면 `mkdir -p ~/.config/collab-os` 를 실행하고, BEGIN 과 END 사이의 글을 그대로 담은 ~/.config/collab-os/CHARTER.md 를 만든다.
+3. 플러그인과 같은 방법으로 활성 헌장 경로를 찾는다. 환경 변수 COLLAB_OS_CONFIG 가 빈 값이 아닌 값으로 설정돼 있으면 그 변수가 가리키는 JSON 파일의 "charter" 값이 경로다 — 그 파일이 없거나 비었거나 올바른 JSON 이 아니면 기본 경로 ~/.config/collab-os/CHARTER.md 다(config.json 으로 넘어가지 않는다 — 어느 경우였는지 말한다). 변수가 없거나 빈 값이고 ~/.config/collab-os/config.json 이 있고 올바른 JSON 이면 그 파일의 "charter" 값이 경로다. 그 밖의 경우와 "charter" 키가 없거나 비었거나 문자열이 아닌 경우는 ~/.config/collab-os/CHARTER.md 다. 상대 경로는 설정 파일이 있는 폴더 기준이고 ~ 는 홈이다. 그다음: 그 경로에 파일이 없으면 `mkdir -p ~/.config/collab-os`(기본 경로가 아니면 그 경로의 폴더 만들기)를 실행하고 BEGIN 과 END 사이의 글을 그대로 담은 파일을 만든다. 파일이 있으면 아직 건드리지 말고, 그 파일의 `## I<숫자>.` 제목을 BEGIN~END 의 네 조항(I2·I3·I4·I8)과 비교해 경로, 빠진 제목, 덧붙일 글 전문, 백업 이름 <그 경로>.bak-<YYYYMMDD-HHMMSS>, 복원 명령 cp "<백업>" "<그 경로>" 를 보여 주고 나에게 묻는다. 내가 「예」라고 할 때만: 먼저 그 이름으로 백업 사본을 만들고, 빠진 조항을 파일 끝에 덧붙인다 — 덮어쓰기·순서 바꾸기·있는 글 고치기는 하지 않는다. 빠진 것이 없으면 그렇다고 말하고 계속한다. `## I<숫자>.` 제목이 하나도 없는 파일(자기 형식의 헌장)이면 네 조항을 보여 주고 무엇이 빠졌는지 알 수 없다고 말한 뒤 같은 방식으로 묻는다 — 「아니오」면 그대로 둔다.
 BEGIN
 # My charter
 
@@ -158,7 +158,7 @@ claude plugin install collab-os@collab-os
 - `✘ Path does not exist: .../collab-os/plugin`(마켓플레이스 단계에서 나옴): 다른 폴더에서 실행했습니다. 압축을 푼 폴더 안에서 실행하세요(바로 위 폴더에서 할 때는 `./<폴더 이름>/plugin` 형을 씁니다).
 - `✘ Failed to install plugin "collab-os@collab-os": Plugin "collab-os" not found in marketplace "collab-os".`: 마켓플레이스 단계를 건너뛰었거나 실패했습니다. 그것부터 실행하세요.
 
-**그다음 헌장 만들기**: 플러그인은 설정 파일이 달리 말하지 않으면 `~/.config/collab-os/CHARTER.md`를 찾습니다. **아래 상자 전체가 명령 하나입니다. 터미널에 통째로 붙여넣으세요**(헌장 글을 손으로 옮기는 게 아닙니다). 그 경로에 헌장이 이미 있으면 건드리지 않고 그렇다고 말합니다.
+**그다음 헌장 만들기**: 플러그인은 설정 파일이 달리 말하지 않으면 `~/.config/collab-os/CHARTER.md`를 찾습니다. **아래 상자 전체가 명령 하나입니다. 터미널에 통째로 붙여넣으세요**(헌장 글을 손으로 옮기는 게 아닙니다). 그 경로에 헌장이 이미 있으면 건드리지 않고 그렇다고 말합니다. 빠진 시작판 조항을 넣고 싶으면 위 설치 프롬프트의 3단계가 보여 주고 묻습니다(백업 뒤, 「예」일 때만). 플러그인을 업데이트하거나 옛 판으로 되돌려도 헌장은 바뀌지 않습니다.
 
 ```
 if [ -e ~/.config/collab-os/CHARTER.md ]; then
@@ -189,7 +189,7 @@ EOF
 fi
 ```
 
-열 조항을 다 쓰고 싶으면 `collab-os` 폴더 안에서 다음을 실행합니다. 헌장이 아직 없으면 `mkdir -p ~/.config/collab-os && cp CHARTER-TEMPLATE.md ~/.config/collab-os/CHARTER.md`, 시작판 헌장이 이미 있으면 `cp ~/.config/collab-os/CHARTER.md ~/.config/collab-os/CHARTER-starter-$(date +%Y%m%d-%H%M%S).md && cp CHARTER-TEMPLATE.md ~/.config/collab-os/CHARTER.md`. 뒤 명령은 옛 헌장을 먼저 시각이 붙은 이름으로 복사하므로, 템플릿을 못 찾아도 지금 헌장은 그대로 남습니다. 다른 초에 만든 사본은 모두 남고, 같은 초에 다시 실행하면 그 초의 사본을 덮습니다. 헌장을 다른 곳에 두려면 `~/.config/collab-os/config.json`을 만들어 위치를 알려 줍니다(내용은 [`collab-os.config.example.json`](collab-os.config.example.json) 참고). 훅 안내문을 한국어로 보려면 설정에 `"lang": "ko"`를 넣습니다.
+열 조항을 다 쓰고 싶으면 `collab-os` 폴더 안에서 다음을 실행합니다. 헌장이 아직 없으면 `mkdir -p ~/.config/collab-os && cp CHARTER-TEMPLATE.md ~/.config/collab-os/CHARTER.md`, 시작판 헌장이 이미 있으면 `cp ~/.config/collab-os/CHARTER.md ~/.config/collab-os/CHARTER.md.bak-$(date +%Y%m%d-%H%M%S) && cp CHARTER-TEMPLATE.md ~/.config/collab-os/CHARTER.md`. 뒤 명령은 옛 헌장을 먼저 시각이 붙은 이름으로 복사하므로, 템플릿을 못 찾아도 지금 헌장은 그대로 남습니다. 다른 초에 만든 사본은 모두 남고, 같은 초에 다시 실행하면 그 초의 사본을 덮습니다. 헌장을 다른 곳에 두려면 `~/.config/collab-os/config.json`을 만들어 위치를 알려 줍니다(내용은 [`collab-os.config.example.json`](collab-os.config.example.json) 참고). 훅 안내문을 한국어로 보려면 설정에 `"lang": "ko"`를 넣습니다.
 
 파이썬 도구는 Python 3.9 이상만 있으면 됩니다. 다른 설치는 없습니다.
 
@@ -215,7 +215,7 @@ fi
 이렇게 돼야 합니다:
 
 1. **정찰 먼저**: 무엇을 확인했고(기존 예약 작업, 기존 스크립트, 메일을 어떻게 보낼지) 무엇을 확인하지 못했는지 보고합니다.
-2. **카드 한 장, 다섯 칸**: 목적, 산출물, 지평, 어디서 할지, 읽어야 할 정본. 예약 발송이라 되돌리기 줄도 나와야 합니다. 이 다섯 칸과 순서는 gate 스킬이 정해 둔 것입니다(시험자 의견은 아래 「평소에는 슬래시 명령을 치지 않아도 됩니다」 절).
+2. **카드 한 장, 다섯 칸**: 목적, 산출물, 지평, 어디서 할지, 읽어야 할 정본. 예약 발송이라 되돌리기 줄, 그리고 「Rules checked:」 한 줄(어떤 규칙 파일을 읽었고 겹침·충돌이 있는지)도 나와야 합니다. 이 다섯 칸과 순서는 gate 스킬이 정해 둔 것입니다(시험자 의견은 아래 「평소에는 슬래시 명령을 치지 않아도 됩니다」 절).
 3. **멈춰야 합니다**: 답하기 전에는 파일도 예약도 생기지 않습니다. 멈추지 않으면, 그것이 바로 우리가 받고 싶은 피드백입니다.
 
 그 멈춤이 전부입니다. 되돌릴 수 없는 것이 생기기 *전에* "예", "아니오", "그렇게는 아니고"를 말할 수 있습니다.
@@ -224,7 +224,7 @@ fi
 
 - [ ] `claude plugin list`에 `collab-os@collab-os`가 보인다
 - [ ] 새 세션의 훅 안내문이 내 헌장 경로를 말한다
-- [ ] `/collab-os:gate <작업>`이 정찰 → 다섯 칸 카드 → 멈춤 순서로 나왔다
+- [ ] `/collab-os:gate <작업>`이 정찰 → 다섯 칸 카드(표 아래 `Rules checked:` 줄: 어떤 규칙 파일을 읽었고 그 파일들 기준 겹침·충돌이 있는지) → 멈춤 순서로 나왔다
 
 ### 문제가 있으면
 
@@ -233,7 +233,7 @@ fi
 | `/collab-os:gate`가 자동완성되지 않음 | 플러그인이 설치되지 않았거나, 설치 전에 연 세션입니다. 새 세션을 여세요 |
 | `Unknown command: /gate` | `/collab-os:gate`로 치세요. v0.1.2에서는 짧은 `/gate`가 안 됐습니다 |
 | 설치 프롬프트가 경로를 물음 | 압축 푼 `collab-os` 폴더를 터미널 창으로 끌어 놓으면 절대경로가 붙여넣어집니다. 또는 그 폴더 안에서 `pwd`를 실행해 결과를 붙여넣으세요 |
-| 설치 프롬프트가 「헌장이 이미 있다」고 함 | 그대로 두고 계속하세요. 플러그인은 있는 헌장을 씁니다. 처음부터 다시 하려면 옛 파일을 먼저 옆으로 옮기고 설치를 다시 실행하세요 |
+| 설치 프롬프트가 헌장을 이미 찾았다고 함 | 정상입니다. 3단계가 빠진 시작판 조항을 보여 주고 백업 뒤 덧붙일지 묻습니다. 그대로 두려면 「아니오」 |
 | `Charter not found` | 헌장이 `~/.config/collab-os/CHARTER.md`에 없거나 설정 파일이 다른 곳을 가리킵니다. `COLLAB_OS_CONFIG`와 `~/.config/collab-os/config.json`을 확인하세요 |
 | `no config file - using built-in defaults` | 정상입니다. 설정 파일은 선택이며, 다른 경로를 쓰려면 `collab-os.config.example.json`을 보세요 |
 | 카드 없이 바로 일을 시작함 | "그건 게이트가 필요했어"라고 말하고 게이트 장부에 적으세요. 놓친 게이트가 바로 장부가 받는 예외입니다 |
@@ -328,6 +328,10 @@ I'll wait for your confirmation before doing any of it.
 
 </details>
 
+v0.1.5부터는 표 아래, 되돌리기 줄 앞에 `Rules checked:` 줄이 더 나옵니다. 이 카드는 그 전 출력입니다.
+
+**Rules checked.** v0.1.5부터는 모든 게이트 카드와 변경으로 이어지는 정찰 결과에 한 줄이 붙습니다. 어떤 규칙 파일(`.md`)을 읽었고, 하려는 변경과 겹치거나 충돌하는지 적습니다. 「없음」이라고 할 때도 확인한 파일 이름을 함께 적습니다. 시험자가 요청한 내용입니다(2026-10-26). 코드가 아닌 `.md` 규칙을 다루며, 게이트나 정찰이 뜰 때만 나옵니다.
+
 ## 정직한 한계
 
 - **플러그인은 아무것도 강제하지 않습니다.** 헌장 위치를 알리고 절차를 줄 뿐이고, 따르는 것은 모델의 몫입니다. 가치는 건너뛴 단계를 **불가능하게** 만드는 데가 아니라 **보이게** 만드는 데 있습니다. 예외는 `export/`의 공개용 도구 하나로, 유출 검사를 통과하지 못한 트리는 내보내지 않습니다.
@@ -338,7 +342,7 @@ I'll wait for your confirmation before doing any of it.
 
 ## 상태
 
-v0.1.4 — 첫 공개 초안입니다(플러그인 0.1.4). 가장 반가운 피드백은 "시작판 N단계가 실제로 본 화면과 달랐다" 같은 것입니다.
+v0.1.5 — 두 번째 공개 초안입니다(플러그인 0.1.5). v0.1.4 이후 바뀐 것은 [CHANGELOG.md](CHANGELOG.md)(영어)에 있습니다. 가장 반가운 피드백은 "시작판 N단계가 실제로 본 화면과 달랐다" 같은 것입니다.
 
 ## 라이선스
 

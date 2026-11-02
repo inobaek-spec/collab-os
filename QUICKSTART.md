@@ -6,7 +6,7 @@ This is for people who already use Claude Code, Anthropic's terminal assistant. 
 
 ## Install with Claude Code (paste this)
 
-Tested on macOS with Claude Code 2.1.296. On Linux, only the session-start hook and the tools were checked (installing Claude Code there wasn't tested). Windows and WSL haven't been tested. The session-start hook is a POSIX shell script, so on Windows it needs Git Bash (Git for Windows). Without Git Bash, Claude Code runs hooks through PowerShell, and this script won't run there.
+Tested on macOS with Claude Code 2.1.296 (v0.1.4, by an outside tester) and 2.1.316 (v0.1.5 probes by the author). On Linux, only the session-start hook and the tools were checked (installing Claude Code there wasn't tested). Windows and WSL haven't been tested. The session-start hook is a POSIX shell script, so on Windows it needs Git Bash (Git for Windows). Without Git Bash, Claude Code runs hooks through PowerShell, and this script won't run there.
 
 **Easiest:** open Claude Code in the unzipped folder and type one line - `Read INSTALL.md in this folder and follow it step by step.` ([`INSTALL.md`](INSTALL.md) is the prompt below as a file, byte for byte; the pasted block is the path outside testers have used.)
 
@@ -17,12 +17,12 @@ Install the collab-os plugin for me from the folder I unzipped. Do the steps bel
 
 Rules for this whole task:
 - Write nothing outside: the collab-os folder, ~/.config/collab-os/, and what the `claude plugin` commands write on their own: ~/.claude/plugins/, the extraKnownMarketplaces and enabledPlugins entries in ~/.claude/settings.json, and Claude Code's own state file ~/.claude.json (plus its backup under ~/.claude/backups/). Do not edit Claude Code's own files (settings.json, .claude.json) yourself.
-- No rm, no sudo, never overwrite an existing file, no network requests.
+- No rm, no sudo, never overwrite an existing file (the one exception: appending to the charter in step 3, after a backup, and only after I say yes), no network requests.
 - If anything is unclear or a step fails, stop and ask me. Do not guess.
 
 1. Find the absolute path of the unzipped collab-os folder: look in the current folder, its subfolders and its parent folders for plugin/.claude-plugin/marketplace.json, open each one you find and keep only those whose "name" is exactly collab-os. The folder that contains that plugin folder is the collab-os folder, whatever it is called - collab-os, collab-os-main (GitHub's Download ZIP) or a name your unzip tool shortened, such as collab-os-v0. The current folder may itself be that folder. If you do not find exactly one, ask me for the path and stop.
 2. Run `claude plugin marketplace list`. If a marketplace named collab-os is already listed and points at this same folder, just continue. If it points somewhere else, show me both paths and ask whether to replace it; continue only if I say yes, by running `claude plugin marketplace remove collab-os` - tell me first that this also uninstalls the plugin that came from it and deletes its saved options, secrets and data. In either case, then run `claude plugin marketplace add <that absolute path>/plugin`, then `claude plugin install collab-os@collab-os`, then `claude plugin list`. If the list does not show collab-os@collab-os with Status: ✔ enabled, show me the output exactly as printed and stop.
-3. If ~/.config/collab-os/CHARTER.md already exists, do not change it: ask me what to do and stop. Otherwise run `mkdir -p ~/.config/collab-os` and create ~/.config/collab-os/CHARTER.md containing exactly the text between BEGIN and END:
+3. Find the active charter path the same way the plugin does. If the environment variable COLLAB_OS_CONFIG is set to a non-empty value, the path is the "charter" value in the JSON file it names; if that file is missing, empty or not valid JSON, the path is the default ~/.config/collab-os/CHARTER.md (do not fall back to config.json - say which case you hit). If the variable is unset or empty and ~/.config/collab-os/config.json exists and is valid JSON, the path is its "charter" value. Otherwise, and whenever the "charter" key is absent, empty or not a string, the path is ~/.config/collab-os/CHARTER.md. A relative value counts from the config file's folder; ~ is your home. Then: if no file is at that path, run `mkdir -p ~/.config/collab-os` (or create that path's folder) and create the file containing exactly the text between BEGIN and END. If a file is there, do not change it yet: compare its `## I<number>.` headings with the four between BEGIN and END (I2, I3, I4, I8) and show me the path, the headings that are missing, the exact text you would append, the backup name <that path>.bak-<YYYYMMDD-HHMMSS> and the restore command cp "<backup>" "<that path>". Then ask me. Only if I answer yes: copy the file to the backup name first, then append the missing articles to the end of the file - never overwrite, reorder or edit what is there. If nothing is missing, say so and continue. If the file has no `## I<number>.` headings at all (a charter in your own form), show the four articles, say you cannot tell what is missing, and ask the same way - "no" leaves it untouched:
 BEGIN
 # My charter
 
@@ -97,7 +97,7 @@ claude plugin install collab-os@collab-os
 
 The plugin looks for your charter at `~/.config/collab-os/CHARTER.md` unless a config file says otherwise. Create it.
 
-**The whole box below is one command: paste all of it into your terminal at once. You are not meant to copy the charter text into a file by hand.** If you already have a charter at that path, the command leaves it alone and says so.
+**The whole box below is one command: paste all of it into your terminal at once. You are not meant to copy the charter text into a file by hand.** If you already have a charter at that path, the command leaves it alone and says so. To add missing starter articles, step 3 of the install prompt above shows them and asks first (after a backup, only if you say yes). Updating or reverting the plugin never changes your charter.
 
 ```
 if [ -e ~/.config/collab-os/CHARTER.md ]; then
@@ -128,7 +128,7 @@ EOF
 fi
 ```
 
-Want all ten articles instead? From inside the `collab-os` folder - if you have no charter yet: `mkdir -p ~/.config/collab-os && cp CHARTER-TEMPLATE.md ~/.config/collab-os/CHARTER.md`. If the starter charter is already there: `cp ~/.config/collab-os/CHARTER.md ~/.config/collab-os/CHARTER-starter-$(date +%Y%m%d-%H%M%S).md && cp CHARTER-TEMPLATE.md ~/.config/collab-os/CHARTER.md` - the old charter is copied to a time-stamped name first, so if the template is not found your charter stays as it was. Copies made in different seconds all stay; a rerun within the same second replaces that second's copy.
+Want all ten articles instead? From inside the `collab-os` folder - if you have no charter yet: `mkdir -p ~/.config/collab-os && cp CHARTER-TEMPLATE.md ~/.config/collab-os/CHARTER.md`. If the starter charter is already there: `cp ~/.config/collab-os/CHARTER.md ~/.config/collab-os/CHARTER.md.bak-$(date +%Y%m%d-%H%M%S) && cp CHARTER-TEMPLATE.md ~/.config/collab-os/CHARTER.md` - the old charter is copied to a time-stamped name first, so if the template is not found your charter stays as it was. Copies made in different seconds all stay; a rerun within the same second replaces that second's copy.
 
 ### Step 4 - open a new session (1 minute)
 
@@ -175,7 +175,7 @@ Pick a task that would touch something running. For example:
 What should happen:
 
 1. **Recon first** - Claude reports what it checked (existing jobs, existing scripts, how mail would be sent) and what it could not check.
-2. **One card, five boxes** - purpose, output, horizon, where to do it, sources to load. Because this job would send mail on a schedule, expect a rollback line as well. The gate skill specifies these five boxes and their order; one tester (one person so far) said that was what they liked - the "things to decide" they usually get at the end of a task does not come as a table, the card is always the same table.
+2. **One card, five boxes** - purpose, output, horizon, where to do it, sources to load. Because this job would send mail on a schedule, expect a rollback line as well, and a one-line `Rules checked:` note - which rule files were read, and overlap/conflict. The gate skill specifies these five boxes and their order; one tester (one person so far) said that was what they liked - the "things to decide" they usually get at the end of a task does not come as a table, the card is always the same table.
 3. **It should stop:** no files created and nothing scheduled until you answer. If it does not stop, that is exactly the feedback we want.
 
 That stop is the whole point. You get to say "yes", "no", or "not like that" *before* anything irreversible exists.
@@ -184,7 +184,7 @@ That stop is the whole point. You get to say "yes", "no", or "not like that" *be
 
 - [ ] `claude plugin list` shows `collab-os`
 - [ ] a new session's hook message names your charter path
-- [ ] `/collab-os:gate <task>` produced recon, a five-box card, and then stopped
+- [ ] `/collab-os:gate <task>` produced recon, a five-box card with a `Rules checked:` line under it (which rule files, and overlap/conflict with the files named), and then stopped
 
 ## If something is off
 
@@ -193,7 +193,7 @@ That stop is the whole point. You get to say "yes", "no", or "not like that" *be
 | `/collab-os:gate` does not autocomplete | The plugin is not installed or the session was opened before installing - start a new session |
 | `Unknown command: /gate` | Type ``/collab-os:gate``. On v0.1.2 the short ``/gate`` did not work. |
 | The installer asks you for the path | Drag the unzipped `collab-os` folder into the terminal window (it pastes the absolute path), or run `pwd` inside that folder, and paste the result |
-| The installer says a charter already exists | Keep it and continue - the plugin uses the charter that is there. To start over, move the old file aside first and run the install again |
+| The installer finds a charter already there | Normal. Step 3 shows which starter articles your charter lacks and asks before appending them (after a backup). Say "no" to keep it exactly as it is |
 | `Charter not found` | The charter is not at `~/.config/collab-os/CHARTER.md`, or a config file points elsewhere. Check `COLLAB_OS_CONFIG` and `~/.config/collab-os/config.json` |
 | `no config file - using built-in defaults` | Normal. A config file is optional; see `collab-os.config.example.json` when you want other paths |
 | Claude starts working without a card | Say "that needed a gate" and record it in the gate log - a missed gate is exactly the kind of exception the log is for |

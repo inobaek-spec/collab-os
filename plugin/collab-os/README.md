@@ -1,4 +1,4 @@
-# collab-os plugin v0.1.4
+# collab-os plugin v0.1.5
 
 Three procedures and one session-start hook for Claude Code. The plugin holds **procedures only**; the rules they enforce live in your own charter file (start from `CHARTER-TEMPLATE.md` at the repository root).
 
@@ -16,11 +16,11 @@ Working rules for an AI assistant tend to get pasted into several places - a glo
 
 | Kind | Name | What it does |
 |---|---|---|
-| skill | `gate` | The 5-box decision card procedure, plus when the gate fires |
+| skill | `gate` | The 5-box decision card procedure, when the gate fires, and the Rules checked line under the card |
 | skill | `recon` | Check reality before asserting, creating or moving anything; show the result first |
 | skill | `handoff` | The 7-section handoff block for surface or model switches |
 | by hand | `/collab-os:gate <task>` `/collab-os:recon <target>` `/collab-os:handoff <destination>` | The same three skills, called directly. What follows the name is passed to the skill as its target |
-| hook | `SessionStart` | Prints the charter path, gate log, claim log and handoff folder into the session |
+| hook | `SessionStart` | Prints the charter path, gate log, claim log, handoff folder and the always-loaded rules file into the session |
 
 ## Design choices
 

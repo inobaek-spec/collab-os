@@ -31,6 +31,7 @@ Check the real thing (the target's files and folders, recent history such as `gi
   Weak: "the front end never reads the URL". Strong: "inside `index.html` there are 0 places that read the URL". The strong form can be refuted in one line by the next person, which is the point.
 - If documents or memory disagree with reality, **reality wins**: say so, update the note, and put an observation date on anything you record about structure.
 - If something already exists for the same purpose, revise it instead of creating a second one.
+- When the recon leads to a proposal, a decision or a change, end the recon result with the same one line the gate card carries: `Rules checked: <paths> · overlap/conflict: <what, or "none found in" the files listed>` - the rule files that govern the target (the charter and the always-loaded rules file the hook announced, and the target's own policy `.md`). The gate card and the recon result share this line so the reader sees it in the same shape every time. It covers `.md` rules, not code.
 
 ## Basic recon set
 
@@ -39,6 +40,7 @@ Check the real thing (the target's files and folders, recent history such as `gi
 | Map | The project's own index or README, if it has one, and whatever health or status notes it keeps |
 | The thing itself | Its folder tree, recent history (`git log`), modification times, and the tests that cover it |
 | What is running | Any scheduler, service or job that reads the target, and when it runs next - editing a file a running job reads is a deployment |
+| Rules | The rule files that govern the target - the charter, the always-loaded rules file, the target's own policy `.md`. Which ones you read, and whether what you are about to do overlaps or conflicts with them; "none" names the files checked |
 
 Adapt the set to your machine. The rule is not the list; the rule is "look before you assert, and show what you looked at".
 
